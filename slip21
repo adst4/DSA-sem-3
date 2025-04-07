@@ -1,0 +1,192 @@
+/*Q1. Write a program that reverses a string of characters. The function should use a stack library (cststack.h). Use a static implementation of the stack.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 50
+
+int top, n;
+char stack[MAX] = {};
+
+void init()
+{
+    top = -1;
+    printf("\nEnter size of the stack: ");
+    scanf("%d", &n);
+    printf("\nStatic Stack Initiaized\n");
+}
+
+void push(char ch)
+{
+    if (isfull())
+        printf("stack is full");
+    else
+    {
+        top++;
+        stack[top] = ch;
+    }
+}
+
+char pop()
+{
+    char ch;
+    if (isempty())
+        printf("stack is empty");
+    else
+    {
+        ch = stack[top];
+        top--;
+        return ch;
+    }
+}
+
+int isempty()
+{
+    if (top == -1)
+        return 1;
+    else
+        return 0;
+}
+
+int isfull()
+{
+    if (top == (n - 1))
+        return 1;
+    else
+        return 0;
+}
+
+int main()
+
+{
+    int choice, i;
+    char str[10], ch;
+    while (1)
+    {
+        printf("\n1. Create character stack\n2. Reverse character stack\n3. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            init();
+            printf("\nEnter the string: ");
+            scanf("%s", &str);
+            for (i = 0; str[i] != '\0'; i++)
+            {
+                push(str[i]);
+            }
+            break;
+        case 2:
+            printf("\nString in reversed order is: \n");
+            while (!isempty())
+            {
+                ch = pop();
+                printf("\t||%c||\n", ch);
+            }
+            break;
+        case 3:
+            exit(0);
+        }
+    }
+    return 0;
+}
+
+
+/*Q2. Read the data from the file “employee.txt” and sort on names in alphabetical order (use strcmp) using insertion sort or selection sort*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct employee
+{
+    int age;
+    char name[10];
+    float salary;
+} record;
+record employee[100];
+
+int readFile(record *a)
+{
+    FILE *fp;
+    int i = 0;
+    fp = fopen("employee.txt", "r");
+    while (!feof(fp))
+    {
+        fscanf(fp, "%d%s%f", &a[i].age, a[i].name, &a[i].salary);
+        i++;
+    }
+    fclose(fp);
+    return i;
+}
+
+void writeFile(record *a, int n)
+{
+    int i = 0;
+    FILE *fp;
+    if ((fp = fopen("sortemployee.txt", "a+")) != NULL)
+    {
+        for (i = 0; i < n; i++)
+            fprintf(fp, "%d %s %.2f\n", a[i].age, a[i].name, a[i].salary);
+    }
+}
+
+void display(record *a, int n)
+{
+    int i;
+    printf("\n");
+    for (i = 0; i < n; i++)
+    {
+        printf("%d %s %.2f\n", a[i].age, a[i].name, a[i].salary);
+    }
+}
+
+void selection_sort(record *emp, int n)
+{
+    int i, j, min;
+    record temp;
+    for (i = 0; i < n - 1; i++)
+    {
+        min = i;
+        for (j = i + 1; j < n; j++)
+        {
+            if ((strcmp(emp[j].name, emp[min].name) <= 0))
+            {
+                min = j;
+            }
+        }
+        if (min != i)
+        {
+            temp = emp[i];
+            emp[i] = emp[min];
+            emp[min] = temp;
+        }
+    }
+    writeFile(emp, n);
+}
+
+void main()
+{
+
+    int i, n, choice;
+    while (1)
+    {
+        printf("\n(1) Read file. (2) Display records. (3) Selection Sort. (4) Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = readFile(employee);
+            break;
+        case 2:
+            display(employee, n);
+            break;
+        case 3:
+            selection_sort(employee, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
