@@ -1,0 +1,213 @@
+/*Q1. Sort a random array of n integers (accept the value of n from user) in ascending order by using selection sort algorithm.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int generate(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        arr[i] = rand() % 100;
+    return n;
+}
+
+void selection_sort(int arr[], int n)
+{
+        int i, j, temp, min;
+        for (i = 0; i < n; i++)
+        {
+                min = i;
+                for (j = i + 1; j < n; j++)
+                {
+                        if (arr[j] < arr[min])
+                                min = j;
+                }
+                if (min != i)
+                {
+                        temp = arr[i];
+                        arr[i] = arr[min];
+                        arr[min] = temp;
+                }
+        }
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create random array. (2) Display array. (3) Selection Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = generate(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            selection_sort(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2. Implement a linear queue library (dyqueue.h) of integers using a dynamic (circular linked list) implementation of the queue and implementing the queue operations as (init(Q), AddQueue(Q, x), X=peek(Q)) */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node *next;
+} node;
+node *front, *rear;
+
+void init()
+{
+    front = NULL;
+    rear = NULL;
+}
+
+void enqueue(int d)
+{
+    node *n;
+    n = (node *)malloc(sizeof(node));
+    n->data = d;
+    n->next = NULL;
+    if ((rear == NULL) && (front == NULL))
+    {
+        front = rear = n;
+        rear->next = front;
+    }
+    else
+    {
+        rear->next = n;
+        rear = n;
+        n->next = front;
+    }
+}
+
+void dequeue()
+{
+    node *t;
+    t = front;
+    if ((front == NULL) && (rear == NULL))
+        printf("\nQueue is Empty");
+    else if (front == rear)
+    {
+        front = rear = NULL;
+        printf("\nDeleted element is %d", t->data);
+        free(t);
+    }
+    else
+    {
+        front = front->next;
+        rear->next = front;
+        printf("\nDeleted element is %d", t->data);
+        free(t);
+    }
+}
+
+void print()
+{
+    node *t;
+    t = front;
+    if ((front == NULL) && (rear == NULL))
+        printf("\nQueue is Empty");
+    else
+    {
+        printf("\n");
+        do
+        {
+            printf("%d\t", t->data);
+            t = t->next;
+        } while (t != front);
+    }
+}
+
+int isEmpty()
+{
+    if ((front == NULL) && (rear == NULL))
+        return 1;
+    else
+        return 0;
+}
+
+void getfront()
+{
+    if (!isEmpty())
+        printf("\nFront element is: %d", front->data);
+    else
+        printf("\nQueue is empty");
+}
+
+void getrear()
+{
+    if (!isEmpty())
+        printf("\nRear element is: %d", rear->data);
+    else
+        printf("\nQueue is empty");
+}
+
+int main()
+{
+    int ch, data;
+    init();
+    printf("Enter Your Choice:-");
+    while (1)
+    {
+        printf("\n1. Insert the Data in Queue\n2. Display queue\n3. Delete from queue\n4. Isempty\n5. Front\n6. Rear\n7. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter element: ");
+            scanf("%d", &data);
+            enqueue(data);
+            break;
+        case 2:
+            print();
+            break;
+        case 3:
+            dequeue();
+            break;
+        case 4:
+            if (isEmpty())
+                printf("\nQueue is empty");
+            else
+                printf("\nQueue is not empty");
+            break;
+        case 5:
+            getfront();
+            break;
+        case 6:
+            getrear();
+            break;
+        case 7:
+            exit(0);
+        }
+    }
+    return 0;
+}
