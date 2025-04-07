@@ -1,0 +1,216 @@
+/*Q1. Create a random array of n integers. Accept a value x from user and use linear search algorithm to check whether the number is present in the array or not and output the position if the number is present.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int generate(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        arr[i] = rand() % 100;
+    return n;
+}
+
+void linear_search(int arr[], int n)
+{
+    int i, x, flag;
+    printf("\nEnter element to be searched: ");
+    scanf("%d", &x);
+    for (i = 0; i < n; i++)
+    {
+        if (arr[i] == x)
+        {
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 1)
+        printf("Number found at location %d", i + 1);
+    else
+        printf("Number not found");
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create random array. (2) Display array. (3) Linear Search. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = generate(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            linear_search(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2. A doubly ended queue allows additions and deletions from both the ends that is front and rear. Initially additions from the front will not be possible. To avoid this situation, the array can be treated as if it were circular. Implement a queue library (dstqueue.h) of integers using a static implementation of the circular queue and implementing the following operations.
+a. isFull(Q)
+b. addFront(Q)
+c. getRear(Q)
+d. deleteRear(Q)*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#define size 10
+
+int front = -1;
+int rear = -1;
+
+void insertq(int queue[], int item)
+{
+    if ((front == 0 && rear == size - 1) || (front == rear + 1))
+    {
+        printf("\nQueue is full");
+        return;
+    }
+    else if (rear == -1)
+    {
+        rear++;
+        front++;
+    }
+    else if (rear == size - 1 && front > 0)
+    {
+        rear = 0;
+    }
+    else
+    {
+        rear++;
+    }
+    queue[rear] = item;
+}
+
+void display(int queue[])
+{
+    int i;
+    printf("\n");
+    if (front > rear)
+    {
+        for (i = front; i < size; i++)
+            printf("%d ", queue[i]);
+        for (i = 0; i <= rear; i++)
+            printf("%d ", queue[i]);
+    }
+    else
+    {
+        for (i = front; i <= rear; i++)
+            printf("%d ", queue[i]);
+    }
+}
+
+void deleteq(int queue[])
+{
+    if (front == -1)
+    {
+        printf("Queue is empty ");
+    }
+    else if (front == rear)
+    {
+        printf("\n %d deleted", queue[front]);
+        front = -1;
+        rear = -1;
+    }
+    else
+    {
+        printf("\n %d deleted", queue[front]);
+        front++;
+    }
+}
+
+int isEmpty()
+{
+    if (front == -1)
+        return 1;
+    else
+        return 0;
+}
+
+int isFull()
+{
+    if ((front == 0 && rear == size - 1) || (front == rear + 1))
+        return 1;
+    else
+        return 0;
+}
+
+void getFront(int queue[])
+{
+    printf("\nElement at front: %d", queue[front]);
+}
+
+void getrear(int queue[])
+{
+    printf("\nElement at rear: %d", queue[rear]);
+}
+
+int main()
+{
+    int n, ch;
+    int queue[size];
+    while (1)
+    {
+        printf("\n1. Insert \n2. Delete\n3. Display\n4. Is stack full\n5. Is stack empty\n6. Front \n7. Rear\n 8.Exit");
+        printf("\nEnter your Choice: ");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter number: ");
+            scanf("%d", &n);
+            insertq(queue, n);
+            break;
+        case 2:
+            deleteq(queue);
+            break;
+        case 3:
+            display(queue);
+            break;
+        case 4:
+            if (isFull())
+                printf("\nStack is Full");
+            else
+                printf("\nStack is not full");
+            break;
+        case 5:
+            if (isEmpty())
+                printf("\nStack is empty");
+            else
+                printf("\nStack is not empty");
+            break;
+        case 6:
+            getFront(queue);
+            break;
+        case 7:
+            getrear(queue);
+            break;
+        case 8:
+            exit(0);
+        }
+    }
+}
