@@ -1,0 +1,256 @@
+/*Q1. Implement a stack library (ststack.h) of integers using a static implementation of the stack and implementing the operations like init(S), S=push(S), isFull(S). Write a driver program that includes stack library and calls different stack operations.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 50
+
+int top, n;
+int stack[MAX] = {};
+
+void init()
+
+{
+    top = -1;
+    printf("Enter size of the stack: ");
+    scanf("%d", &n);
+    printf("\nStatic Stack Initiaized\n");
+}
+
+void display_stack()
+{
+    int i = top;
+    while (stack[i] != 0)
+    {
+        printf("\n|%d|", stack[i]);
+        i = i - 1;
+    }
+}
+
+void push()
+{
+    if (top == n - 1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        top++;
+        printf("Enter a element to be pushed: ");
+        scanf("%d", &stack[top]);
+    }
+}
+
+void pop()
+{
+    if (top == -1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Poped value is: %d", stack[top]);
+        top--;
+    }
+}
+
+void peek()
+{
+    if (top == -1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Element at top is:%d", stack[top]);
+    }
+}
+
+void isempty()
+{
+    if (top == -1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not empty\n");
+    }
+}
+
+void isfull()
+{
+    if (top == n - 1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not full\n");
+    }
+}
+
+int main()
+
+{
+    int choice;
+    while (1)
+    {
+        printf("\n1.Init 2.Push 3.Display Stack 4.Pop 5.Peek 6.IsEmpty  7.IsFull 8.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            init();
+            break;
+        case 2:
+            push();
+            break;
+        case 3:
+            display_stack();
+            break;
+        case 4:
+            pop();
+            break;
+        case 5:
+            peek();
+            break;
+        case 6:
+            isempty();
+            break;
+        case 7:
+            isfull();
+            break;
+        case 8:
+            exit(0);
+        }
+    }
+    return 0;
+}
+
+
+/*Q2. There are lists where new elements are always appended at the end of the list. The list can be implemented as a circular list with the external pointer pointing to the last element of the list. Implement singly linked circular list of integers with append and display operations. The operation append(L, n), appends to the end of the list, n integers either accepted from user or randomly generated. */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node *next;
+} node;
+int n;
+
+node *create_first_node()
+{
+    node *newnode;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("Enter element to be inserted in node: ");
+    scanf("%d", &element);
+    newnode->data = element;
+    newnode->next = NULL;
+    return newnode;
+}
+
+void display(node *start)
+{
+    node *temp = start;
+    printf("\n");
+    while (temp->next != NULL)
+    {
+        printf("|%d|%u|--->", temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("|%d|%u|\n", temp->data, temp->next);
+}
+
+node *create_list()
+{
+    int i, element;
+    node *newnode, *firstnode, *temp;
+    printf("Enter number of nodes:\t");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        if (i == 0)
+        {
+            temp = firstnode = create_first_node();
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->data = element;
+            newnode->next = NULL;
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+    return firstnode;
+}
+
+void append(node *start)
+{
+    node *newnode, *temp = start;
+    int element, n1, i;
+    printf("How many elements to be appended: ");
+    scanf("%d", &n1);
+    for (i = 0; i < n1; i++)
+    {
+        if (i == 0)
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("\nEnter Element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->data = element;
+            while (temp->next != NULL)
+            {
+                temp = temp->next;
+            }
+            temp->next = newnode;
+            temp = newnode;
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->data = element;
+            newnode->next = NULL;
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+    n = n + n1;
+}
+
+void main()
+{
+    int choice;
+    node *start = NULL;
+    while (1)
+    {
+        printf("\n1.Create first node\n2.Display list\n3.Create List\n4.Append\n5.Exit ");
+        printf("\nEnter your choice:\t");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            start = create_first_node();
+            break;
+        case 2:
+            display(start);
+            break;
+        case 3:
+            start = create_list();
+            break;
+        case 4:
+            append(start);
+            break;
+        case 5:
+            exit(0);
+        }
+    }
+}
