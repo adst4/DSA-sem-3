@@ -1,0 +1,201 @@
+/*Q1. Sort a random array of n integers (accept the value of n from user) in ascending order by using Selection sort algorithm */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int generate(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        arr[i] = rand() % 100;
+    return n;
+}
+
+void selection_sort(int arr[], int n)
+{
+        int i, j, temp, min;
+        for (i = 0; i < n; i++)
+        {
+                min = i;
+                for (j = i + 1; j < n; j++)
+                {
+                        if (arr[j] < arr[min])
+                                min = j;
+                }
+                if (min != i)
+                {
+                        temp = arr[i];
+                        arr[i] = arr[min];
+                        arr[min] = temp;
+                }
+        }
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create random array. (2) Display array. (3) Selection Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = generate(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            selection_sort(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2. There are lists where insertion should ensure the ordering of data elements. Since the elements are in ascending order the search can terminate once equal or greater element is found. Implement a doubly linked list of ordered integers (ascending/descending) with insert, search and display operations*/
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+    struct node *prev;
+    int data;
+    struct node *next;
+} node;
+int n;
+node *create_first_node()
+{
+    node *newnode;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("Enter element to be inserted in node: ");
+    scanf("%d", &element);
+    newnode->prev = NULL;
+    newnode->data = element;
+    newnode->next = NULL;
+    return newnode;
+}
+void display(node *start)
+{
+    node *temp = start;
+    printf("\n");
+    while (temp->next != NULL)
+    {
+        printf("|%u|%d|%u|--->", temp->prev, temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("|%u|%d|%u|", temp->prev, temp->data, temp->next);
+}
+node *create_list()
+{
+    int i, element;
+    node *newnode, *firstnode, *temp;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        if (i == 0)
+        {
+
+            temp = firstnode = create_first_node();
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->next = NULL;
+            newnode->prev = NULL;
+            newnode->data = element;
+            temp->next = newnode;
+            newnode->prev = temp;
+            temp = newnode;
+        }
+    }
+    return firstnode;
+}
+
+void sort(node *f)
+{
+    node *p, *q;
+    int temp;
+    for (p = f; p != NULL; p = p->next)
+    {
+        for (q = p->next; q != NULL; q = q->next)
+        {
+            if (p->data > q->data)
+            {
+                temp = p->data;
+                p->data = q->data;
+                q->data = temp;
+            }
+        }
+    }
+}
+
+void search(node *f)
+{
+    int x;
+    node *p;
+    int temp;
+    printf("\nEnter node to be searched: ");
+    scanf("%d", &x);
+    for (p = f; p != NULL; p = p->next)
+    {
+        if (p->data == x)
+        {
+            printf("\nNumber found at location %u", p);
+        }
+    }
+}
+
+void main()
+{
+    int choice;
+    node *start = NULL;
+    while (1)
+    {
+        printf("\n1.Create first node\n2.Display list\n3.Create List\n4.Sort list\n5.Search\n6.Exit ");
+        printf("\nEnter your choice:\t");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            start = create_first_node();
+            break;
+        case 2:
+            display(start);
+            break;
+        case 3:
+            start = create_list();
+            break;
+        case 4:
+            sort(start);
+            break;
+        case 5:
+            search(start);
+            break;
+        case 6:
+            exit(0);
+        }
+    }
+}
