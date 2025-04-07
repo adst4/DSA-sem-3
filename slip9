@@ -1,0 +1,163 @@
+/*Q1. Write a program to convert an infix expression of the form (a*(b+c)*((d-a)/b)) into its equivalent postfix notation. Consider usual precedence’s of operators. Use stack library of stack of characters using static implementation.*/
+
+#include <stdio.h>
+#include <ctype.h>
+
+char stack[100];
+int top = -1;
+
+void push(char x)
+{
+    top++;
+    stack[top] = x;
+}
+
+char pop()
+{
+    if (top == -1)
+        return -1;
+    else
+        return stack[top--];
+}
+
+int priority(char x)
+{
+    if (x == '(')
+        return 0;
+    if (x == '+' || x == '-')
+        return 1;
+    if (x == '*' || x == '/')
+        return 2;
+    return 0;
+}
+
+int main()
+{
+    char exp[100];
+    char *e, x;
+    printf("Enter the expression: ");
+    scanf("%s", exp);
+    printf("\n");
+    e = exp;
+
+    while (*e != '\0')
+    {
+        if (isalnum(*e))
+            printf("%c ", *e);
+        else if (*e == '(')
+            push(*e);
+        else if (*e == ')')
+        {
+            while ((x = pop()) != '(')
+                printf("%c ", x);
+        }
+        else
+        {
+            while (priority(stack[top]) >= priority(*e))
+                printf("%c ", pop());
+            push(*e);
+        }
+        e++;
+    }
+
+    while (top != -1)
+    {
+        printf("%c ", pop());
+    }
+    return 0;
+}
+
+
+/*Q2 Read the data from the ‘employee.txt’ file and sort on age using Counting sort or Quick sort and write the sorted data to another file 'sortedemponage.txt'*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct employee
+{
+    int age;
+    char name[10];
+    float salary;
+} record;
+record employee[100];
+
+int readFile(record *a)
+{
+    FILE *fp;
+    int i = 0;
+    fp = fopen("employee.txt", "r");
+    while (!feof(fp))
+    {
+        fscanf(fp, "%d%s%f", &a[i].age, a[i].name, &a[i].salary);
+        i++;
+    }
+    fclose(fp);
+    return i;
+}
+
+void writeFile(record *a, int n)
+{
+    int i = 0;
+    FILE *fp;
+    if ((fp = fopen("sortedemponage.txt", "a+")) != NULL)
+    {
+        for (i = 0; i < n; i++)
+            fprintf(fp, "%d %s %.2f\n", a[i].age, a[i].name, a[i].salary);
+    }
+}
+
+void display(record *a, int n)
+{
+    int i;
+    printf("\n");
+    for (i = 0; i < n; i++)
+    {
+        printf("%d %s %.2f\n", a[i].age, a[i].name, a[i].salary);
+    }
+}
+
+void count_sort(record arr[], int n)
+{
+        int i, j;
+        record max;
+        for (i = 0; i < n; i++)
+        {
+                j = i;
+                while (j > 0 && arr[j - 1].age > arr[j].age)
+                {
+                        max = arr[j];
+                        arr[j] = arr[j - 1];
+                        arr[j - 1] = max;
+                        j--;
+                }
+        }
+}
+
+
+void main()
+{
+
+    int i, n, choice;
+    while (1)
+    {
+        printf("\n(1) Read file. (2) Display records. (3) Count Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = readFile(employee);
+            break;
+        case 2:
+            display(employee, n);
+            break;
+        case 3:
+            count_sort(employee, n);
+            writeFile(employee, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
