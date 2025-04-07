@@ -1,0 +1,188 @@
+/*Q1. Read the ‘n’ numbers from user and sort using bubble sort. */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int insert(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    printf("Enter numbers: ");
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+    return n;
+}
+
+void bubble_sort(int arr[], int n)
+{
+    int i, j, temp;
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n - i - 1; j++)
+        {
+            if (arr[j] > arr[j + 1])
+            {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create array. (2) Display array. (3) Bubble Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = insert(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            bubble_sort(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2. Write a program to reverse the elements of a queue using queue library. Implement basic queue operations init, enqueue, dequeue.*/
+
+#include <stdio.h>
+int n, f, r;
+int q[50];
+
+void init()
+{
+    printf("Enter the size of Queue: ");
+    scanf("%d", &n);
+    f = -1;
+    r = -1;
+}
+
+int isempty()
+{
+    if (f == r)
+        return 1;
+    else
+        return 0;
+}
+
+int isfull()
+{
+    if (r == (n - 1))
+        return 1;
+    else
+        return 0;
+}
+
+void enqueue(int data, int l)
+{
+    if (r == l - 1)
+    {
+        printf("Queue is full");
+    }
+    else if ((f == -1) && (r == -1))
+    {
+        f = r = 0;
+        q[r] = data;
+    }
+    else
+    {
+        r++;
+        q[r] = data;
+    }
+}
+
+void dequeue()
+{
+    int no;
+    if (isempty())
+    {
+        printf("\n Queue is Empty ");
+    }
+    else
+    {
+        no = q[f];
+        f++;
+    }
+    return no;
+}
+
+
+void display()
+{
+    int i;
+    for (i = f; i <= r; i++)
+    {
+        printf("\n%d", q[i]);
+    }
+}
+void reverse() 
+{
+    int i, j, t;
+    for (i = f, j = r; i < j; i++, j--)
+    {
+        t = q[i];
+        q[i] = q[j];
+        q[j] = t;
+    }
+}
+void main()
+{
+    int i = 0, t, choice;
+    while (1)
+    {
+        printf("\n1. Init 2. Insert 3. Display 4. Reverse 5. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            init();
+            break;
+        case 2:
+            printf("\nEnter the data for Queue: ");
+            while (i < n)
+            {
+                scanf("%d", &t);
+                enqueue(t, n);
+                i++;
+            }
+            break;
+        case 3:
+            display();
+            break;
+        case 4:
+            reverse();
+            break;
+        case 5:
+            exit(0); 
+        }
+    }
+}
