@@ -1,0 +1,334 @@
+/*Q1 Implement a list library (singlylist.h) for a singly linked list. Create a linked list, reverse it and display reversed linked list*/
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+    int data;
+    struct node *next;
+} node;
+int n;
+
+node *create_first_node()
+{
+    node *newnode;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("Enter element to be inserted in node: ");
+    scanf("%d", &element);
+    newnode->data = element;
+    newnode->next = NULL;
+    return newnode;
+}
+
+void display(node *start)
+{
+    node *temp = start;
+    printf("\n");
+    while (temp->next != NULL)
+    {
+        printf("|%d|%u|--->", temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("|%d|%u|\n", temp->data, temp->next);
+}
+
+node *create_list()
+{
+    int i, element;
+    node *newnode, *firstnode, *temp;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        if (i == 0)
+        {
+            temp = firstnode = create_first_node();
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->data = element;
+            newnode->next = NULL;
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+    return firstnode;
+}
+
+node *insert_at_first(node *start)
+{
+    node *newnode, *temp = start;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("\nEnter Element to be inserted:\t");
+    scanf("%d", &element);
+    newnode->data = element;
+    newnode->next = temp;
+    n++;
+    return newnode;
+}
+
+void append(node *start)
+{
+    node *newnode, *temp = start;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("\nEnter Element to be inserted:\t");
+    scanf("%d", &element);
+    newnode->data = element;
+    while (temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    temp->next = newnode;
+    newnode->next = NULL; // Newline by me
+    n++;
+}
+
+void insert_at_position(node *start)
+{
+    node *temp = start, *newnode;
+    int position, i, element;
+    printf("\nEnter position to insert node");
+    scanf("%d", &position);
+    if (position > 1 && position < n)
+    {
+        for (i = 1; i < position - 1; i++)
+        {
+            temp = temp->next;
+        }
+        newnode = (node *)malloc(sizeof(node *));
+        printf("\nEnter Element to be inserted:\t");
+        scanf("%d", &element);
+        newnode->data = element;
+        newnode->next = temp->next;
+        temp->next = newnode;
+        n++;
+    }
+    else
+    {
+        printf("\nInvalid Position");
+    }
+}
+
+node *delete_at_first(node *start)
+{
+    node *temp = start, *newstart;
+    newstart = temp->next;
+    printf("\nDeleted Data is=%d", temp->data);
+    free(temp);
+    n--;
+    return newstart;
+}
+
+void delete_at_end(node *start)
+{
+    node *temp = start;
+    while (temp->next->next != NULL)
+    {
+        temp = temp->next;
+    }
+    printf("\nDeleted Data is=%d", temp->next->data);
+    free(temp->next);
+    temp->next = NULL;
+    n--;
+}
+
+void delete_at_position(node *start)
+{
+    node *temp = start, *temp1;
+    int position, i;
+    printf("\nEnter position of a node to be deleted:\t");
+    scanf("%d", &position);
+    if (position > 1 && position < n)
+    {
+        for (i = 1; i < position - 1; i++)
+        {
+            temp = temp->next;
+        }
+        temp1 = temp->next;
+        temp->next = temp1->next;
+        printf("\n deleted data is %d.", temp1->data);
+        free(temp1);
+        n--;
+    }
+    else
+    {
+        printf("\nInvalid Position");
+    }
+}
+
+node *reverse_list(node *start)
+{
+    node *temp, *q = NULL, *r = NULL;
+    temp = start;
+    while (temp != NULL)
+    {
+        r = q;
+        q = temp;
+        temp = temp->next;
+        q->next = r;
+    }
+    return q;
+}
+
+void main()
+{
+    int choice;
+    node *start = NULL;
+    while (1)
+    {
+        printf("\n1.Create first node\n2.Display list\n3.Create List\n4.Insert at first\n5.Insert at Position\n6.Append\n7.Delete First\n8.Delete at end\n9.Delete at position\n10. Reverse list\n11.exit ");
+        printf("\nEnter your choice:\t");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            start = create_first_node();
+            break;
+        case 2:
+            display(start);
+            break;
+        case 3:
+            start = create_list();
+            break;
+        case 4:
+            start = insert_at_first(start);
+            break;
+        case 5:
+            insert_at_position(start);
+            break;
+        case 6:
+            append(start);
+            break;
+        case 7:
+            start = delete_at_first(start);
+            break;
+        case 8:
+            delete_at_end(start);
+            break;
+        case 9:
+            delete_at_position(start);
+            break;
+        case 10:
+            start = reverse_list(start);
+            break;
+        case 11:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2 Write a program that copies the contents of one stack into another. Use stack library to perform basic stack operations. The order of two stacks must be identical.(Hint: Use a temporary stack to preserve the order). */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct stack
+{
+    int data[200];
+    int top;
+} stack;
+
+void init(stack *s)
+{
+    s->top = -1;
+}
+
+void push(stack *s, int num)
+{
+    s->data[++s->top] = num;
+}
+
+int pop(stack *s)
+{
+    int num;
+    num = s->data[s->top--];
+    return num;
+}
+
+int isempty(stack *s)
+{
+    if (s->top == -1)
+    {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+int isfull(stack *s)
+{
+    if (s->top == 20 - 1)
+        return 1;
+    return 0;
+}
+
+int peek(stack *s)
+{
+    return s->data[s->top];
+}
+
+void display(stack *original, int n)
+{
+    stack *s;
+    int i;
+    s = original;
+    for(i=0;i<n;i++)
+    {
+        printf("\n\t%d", s->data[i]);
+    }
+}
+
+void main()
+{
+    stack s1, s2, t1;
+    int choice, n, num, element, i;
+    while (1)
+    {
+        printf("\n1. Create Stack\n2. Display stack\n3. Copy stack\n4. Display copied stack\n5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            init(&s1);
+            printf("\nHow many elements in stack: ");
+            scanf("%d", &n);
+            printf("\nEnter elements to push: ");
+            for (i = 0; i < n; i++)
+            {
+                scanf("%d", &num);
+                push(&s1, num);
+            }
+            break;
+        case 2:
+            display(&s1, n);
+            break;
+        case 3:
+            init(&s2);
+            init(&t1);
+            while (!isempty(&s1))
+            {
+                push(&t1, pop(&s1));
+            }
+            while (!isempty(&t1))
+            {
+                element = pop(&t1);
+                push(&s1, element);
+                push(&s2, element);
+            }
+            break;
+        case 4:
+            display(&s2, n);
+            break;
+        case 5:
+            exit(0);
+        }
+    }
+}
