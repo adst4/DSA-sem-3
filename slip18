@@ -1,0 +1,71 @@
+/*Q1. Sort a random array of n integers (accept the value of n from user) in ascending order by using Selection sort algorithm */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int generate(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        arr[i] = rand() % 100;
+    return n;
+}
+
+void selection_sort(int arr[], int n)
+{
+        int i, j, temp, min;
+        for (i = 0; i < n; i++)
+        {
+                min = i;
+                for (j = i + 1; j < n; j++)
+                {
+                        if (arr[j] < arr[min])
+                                min = j;
+                }
+                if (min != i)
+                {
+                        temp = arr[i];
+                        arr[i] = arr[min];
+                        arr[min] = temp;
+                }
+        }
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create random array. (2) Display array. (3) Selection Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = generate(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            selection_sort(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
