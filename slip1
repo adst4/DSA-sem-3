@@ -1,0 +1,338 @@
+/*Q1.Implement a list library (doublylist.h) for a doubly linked list of integers
+with the create, display operations. Write a menu driven program to call
+these operations. */
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+    struct node *prev;
+    int data;
+    struct node *next;
+} node;
+int n;
+node *create_first_node()
+{
+    node *newnode;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("Enter element to be inserted in node: ");
+    scanf("%d", &element);
+    newnode->prev = NULL;
+    newnode->data = element;
+    newnode->next = NULL;
+    return newnode;
+}
+void display(node *start)
+{
+    node *temp = start;
+    printf("\n");
+    while (temp->next != NULL)
+    {
+        printf("|%u|%d|%u|--->", temp->prev, temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("|%u|%d|%u|", temp->prev, temp->data, temp->next);
+}
+node *create_list()
+{
+    int i, element;
+    node *newnode, *firstnode, *temp;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        if (i == 0)
+        {
+            temp = firstnode = create_first_node();
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->next = NULL;
+            newnode->prev = NULL;
+            newnode->data = element;
+            temp->next = newnode;
+            newnode->prev = temp;
+            temp = newnode;
+        }
+    }
+    return firstnode;
+}
+node *insert_at_first(node *start)
+{
+    node *newnode, *temp = start;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("\nEnter Element to be inserted: ");
+    scanf("%d", &element);
+    newnode->data = element;
+    newnode->next = temp;
+    temp->prev = newnode;
+    n++;
+    return newnode;
+}
+void append(node *start)
+{
+    node *newnode, *temp = start;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("\nEnter Element to be inserted: ");
+    scanf("%d", &element);
+    newnode->data = element;
+    while (temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    temp->next = newnode;
+    newnode->prev = temp;
+    n++;
+}
+void insert_at_position(node *start)
+{
+    node *temp = start, *newnode;
+    int position, i, element;
+    printf("\nEnter position to insert node: ");
+    scanf("%d", &position);
+    if (position > 1 && position < n)
+    {
+        for (i = 1; i < position - 1; i++)
+        {
+            temp = temp->next;
+        }
+        newnode = (node *)malloc(sizeof(node *));
+        printf("\nEnter Element to be inserted: ");
+        scanf("%d", &element);
+        newnode->data = element;
+        newnode->next = temp->next;
+        newnode->next->prev = newnode;
+        temp->next = newnode;
+        newnode->prev = temp;
+        n++;
+    }
+    else
+    {
+        printf("\nInvalid Position");
+    }
+}
+void delete_at_position(node *start)
+{
+    node *temp = start, *temp1;
+    int position, i;
+    printf("\nEnter position of a node to be deleted:\t");
+    scanf("%d", &position);
+    if (position > 1 && position < n)
+    {
+        for (i = 1; i < position - 1; i++)
+        {
+            temp = temp->next;
+        }
+        temp1 = temp->next;
+        temp->next = temp1->next;
+        temp->next->prev = temp;
+        printf("\n deleted data is %d.", temp1->data);
+        free(temp1);
+    }
+    else
+    {
+        printf("\nInvalid Position");
+    }
+}
+
+node *delete_at_first(node *start)
+{
+    node *temp = start, *newstart;
+    newstart = temp->next;
+    newstart->prev = NULL;
+    printf("\nDeleted Data is=%d", temp->data);
+    free(temp);
+    n--;
+    return newstart;
+}
+void delete_at_end(node *start)
+{
+    node *temp = start;
+    while (temp->next->next != NULL)
+    {
+        temp = temp->next;
+    }
+    printf("\nDeleted Data is=%d", temp->next->data);
+    free(temp->next);
+    temp->next = NULL;
+    n--;
+}
+
+void main()
+{
+    int choice;
+    node *start = NULL;
+    while (1)
+    {
+        printf("\n1.Create first node\n2.Display list\n3.Create List\n4.Insert at first\n5.Insert at Position\n6.Append\n7.Delete First\n8.Delete at end\n9.Delete at position\n10.Exit ");
+        printf("\nEnter your choice:\t");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            start = create_first_node();
+            break;
+        case 2:
+            display(start);
+            break;
+        case 3:
+            start = create_list();
+            break;
+        case 4:
+            start = insert_at_first(start);
+            break;
+        case 5:
+            insert_at_position(start);
+            break;
+        case 6:
+            append(start);
+            break;
+        case 7:
+            start = delete_at_first(start);
+            break;
+        case 8:
+            delete_at_end(start);
+            break;
+        case 9:
+            delete_at_position(start);
+            break;
+        case 10:
+            exit(0);
+        }
+    }
+}
+
+/*Q2. Write a program that sorts the elements of linked list using any of sorting technique.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+    struct node *prev;
+    int data;
+    struct node *next;
+} node;
+int n;
+node *create_first_node()
+{
+    node *newnode;
+    int element;
+    newnode = (node *)malloc(sizeof(node *));
+    printf("Enter element to be inserted in node: ");
+    scanf("%d", &element);
+    newnode->prev = NULL;
+    newnode->data = element;
+    newnode->next = NULL;
+    return newnode;
+}
+void display(node *start)
+{
+    node *temp = start;
+    printf("\n");
+    while (temp->next != NULL)
+    {
+        printf("|%u|%d|%u|--->", temp->prev, temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("|%u|%d|%u|", temp->prev, temp->data, temp->next);
+}
+node *create_list()
+{
+    int i, element;
+    node *newnode, *firstnode, *temp;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        if (i == 0)
+        {
+
+            temp = firstnode = create_first_node();
+        }
+        else
+        {
+            newnode = (node *)malloc(sizeof(node *));
+            printf("Enter element to be inserted in node: ");
+            scanf("%d", &element);
+            newnode->next = NULL;
+            newnode->prev = NULL;
+            newnode->data = element;
+            temp->next = newnode;
+            newnode->prev = temp;
+            temp = newnode;
+        }
+    }
+    return firstnode;
+}
+
+void sort(node *f)
+{
+    node *p, *q;
+    int temp;
+    for (p = f; p != NULL; p = p->next)
+    {
+        for (q = p->next; q != NULL; q = q->next)
+        {
+            if (p->data > q->data)
+            {
+                temp = p->data;
+                p->data = q->data;
+                q->data = temp;
+            }
+        }
+    }
+}
+
+void search(node *f)
+{
+    int x;
+    node *p;
+    int temp;
+    printf("\nEnter node to be searched: ");
+    scanf("%d", &x);
+    for (p = f; p != NULL; p = p->next)
+    {
+        if (p->data == x)
+        {
+            printf("\nNumber found at location %u", p);
+        }
+    }
+}
+
+void main()
+{
+    int choice;
+    node *start = NULL;
+    while (1)
+    {
+        printf("\n1.Create first node\n2.Display list\n3.Create List\n4.Sort list\n5.Search\n6.Exit ");
+        printf("\nEnter your choice:\t");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            start = create_first_node();
+            break;
+        case 2:
+            display(start);
+            break;
+        case 3:
+            start = create_list();
+            break;
+        case 4:
+            sort(start);
+            break;
+        case 5:
+            search(start);
+            break;
+        case 6:
+            exit(0);
+        }
+    }
+}
