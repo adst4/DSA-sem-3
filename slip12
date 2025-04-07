@@ -1,0 +1,219 @@
+/*Q1. Read the data from file 'cities.txt' containing names of cities and their STD codes. Accept a name of the city from user and use linear search algorithm to check whether the name is present in the file and output the STD code, otherwise output “city not in the list”. */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct city
+{
+    char name[20];
+    int code;
+} rec;
+rec city[100];
+
+int readFile(rec *a)
+{
+    FILE *fp;
+    int i = 0;
+    fp = fopen("cities.txt", "r");
+    while (!feof(fp))
+    {
+        fscanf(fp, "%s%d", a[i].name, &a[i].code);
+        i++;
+    }
+    fclose(fp);
+    return i;
+}
+
+void display(int n)
+{
+    int i;
+    printf("\n");
+    for (i = 0; i < n; i++)
+    {
+        printf("%s %d\n", city[i].name, city[i].code);
+    }
+}
+
+void linearsearch(rec *a, int n)
+{
+    int i;
+    char x[20];
+    printf("\nEnter city to be searched: ");
+    scanf("%s", &x);
+    for (i = 0; i < n; i++)
+    {
+        if (strcmp(a[i].name, x) == 0)
+        {
+            printf("\nSTD Code\n%d\n", a[i].code);
+            break;
+        }
+    }
+}
+
+void main()
+{
+
+    int i, n, choice;
+    while (1)
+    {
+        printf("\n(1) Read file. (2) Display records. (3) Search city. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = readFile(city);
+            break;
+        case 2:
+            display(n);
+            break;
+        case 3:
+            linearsearch(city, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+
+/*Q2. Implement a circular queue library (cir_queue.h) of integers using a dynamic (circular linked list) implementation of the queue and implementing init(Q), AddQueue(Q) and DeleteQueue(Q) operations. Write a menu driven program that includes queue library and calls different queue operations.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node *next;
+} node;
+node *front, *rear;
+
+void init()
+{
+    front = NULL;
+    rear = NULL;
+}
+
+void enqueue(int d)
+{
+    node *n;
+    n = (node *)malloc(sizeof(node));
+    n->data = d;
+    n->next = NULL;
+    if ((rear == NULL) && (front == NULL))
+    {
+        front = rear = n;
+        rear->next = front;
+    }
+    else
+    {
+        rear->next = n;
+        rear = n;
+        n->next = front;
+    }
+}
+
+void dequeue()
+{
+    node *t;
+    t = front;
+    if ((front == NULL) && (rear == NULL))
+        printf("\nQueue is Empty");
+    else if (front == rear)
+    {
+        front = rear = NULL;
+        printf("\nDeleted element is %d", t->data);
+        free(t);
+    }
+    else
+    {
+        front = front->next;
+        rear->next = front;
+        printf("\nDeleted element is %d", t->data);
+        free(t);
+    }
+}
+
+void print()
+{
+    node *t;
+    t = front;
+    if ((front == NULL) && (rear == NULL))
+        printf("\nQueue is Empty");
+    else
+    {
+        printf("\n");
+        do
+        {
+            printf("%d\t", t->data);
+            t = t->next;
+        } while (t != front);
+    }
+}
+
+int isEmpty()
+{
+    if ((front == NULL) && (rear == NULL))
+        return 1;
+    else
+        return 0;
+}
+
+void getfront()
+{
+    if (!isEmpty())
+        printf("\nFront element is: %d", front->data);
+    else
+        printf("\nQueue is empty");
+}
+
+void getrear()
+{
+    if (!isEmpty())
+        printf("\nRear element is: %d", rear->data);
+    else
+        printf("\nQueue is empty");
+}
+
+int main()
+{
+    int ch, data;
+    printf("Enter Your Choice:-");
+    while (1)
+    {
+        printf("\n1. Insert the Data in Queue\n2. Display queue\n3. Delete from queue\n4. Isempty\n5. Front\n6. Rear\n7. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            printf("\nEnter element: ");
+            scanf("%d", &data);
+            enqueue(data);
+            break;
+        case 2:
+            print();
+            break;
+        case 3:
+            dequeue();
+            break;
+        case 4:
+            if (isEmpty())
+                printf("\nQueue is empty");
+            else
+                printf("\nQueue is not empty");
+            break;
+        case 5:
+            getfront();
+            break;
+        case 6:
+            getrear();
+            break;
+        case 7:
+            exit(0);
+        }
+    }
+    return 0;
+}
