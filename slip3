@@ -1,0 +1,133 @@
+/*Q1. Sort a random array of n integers (accept the value of n from user) in ascending order by using insertion sort algorithm. */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+void display(int arr[], int n)
+{
+    int i;
+    printf("\nArray is: ");
+    for (i = 0; i < n; i++)
+    {
+        printf("\t%d", arr[i]);
+    }
+}
+
+int generate(int arr[])
+{
+    int i, n;
+    printf("\nEnter n: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        arr[i] = rand() % 100;
+    return n;
+}
+
+void insertion_sort(int A[], int n)
+{
+    int i, j, temp;
+    for (i = 0; i < n; i++)
+    {
+        temp = A[i];
+        j = i - 1;
+        while (temp < A[j] && j >= 0)
+        {
+            A[j + 1] = A[j];
+            j = j - 1;
+        }
+        A[j + 1] = temp;
+    }
+}
+
+void main()
+{
+    int arr[MAX], n;
+    int choice;
+    while (1)
+    {
+        printf("\n(1) Create random array. (2) Display array. (3) Insertion Sort. (4) Exit.");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            n = generate(arr);
+            break;
+        case 2:
+            display(arr, n);
+            break;
+        case 3:
+            insertion_sort(arr, n);
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+}
+
+/*Q2. Write a C program to evaluate postfix expression. */
+
+#include <stdio.h>
+int stack[20];
+int top = -1;
+
+void push(int x)
+{
+    stack[++top] = x;
+}
+
+int pop()
+{
+    return stack[top--];
+}
+
+int main()
+{
+    char exp[20];
+    char *e;
+    int n1, n2, n3, num;
+    printf("Enter the expression :: ");
+    scanf("%s", exp);
+    e = exp;
+    while (*e != '\0')
+    {
+        if (isdigit(*e))
+        {
+            num = *e - 48;
+            push(num);
+        }
+        else
+        {
+            n1 = pop();
+            n2 = pop();
+            switch (*e)
+            {
+            case '+':
+            {
+                n3 = n1 + n2;
+                break;
+            }
+            case '-':
+            {
+                n3 = n2 - n1;
+                break;
+            }
+            case '*':
+            {
+                n3 = n1 * n2;
+                break;
+            }
+            case '/':
+            {
+                n3 = n2 / n1;
+                break;
+            }
+            }
+            push(n3);
+        }
+        e++;
+    }
+    printf("\nThe result of expression %s  =  %d\n\n", exp, pop());
+    return 0;
+}
